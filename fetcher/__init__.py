@@ -5,21 +5,21 @@ import time
 from cStringIO import StringIO
 
 
-def fetch(requets, concurrent=50, timeout_ms=1000, follow_redirects=True):
+def fetch(requests, concurrent=50, timeout_ms=1000, follow_redirects=True):
   multi = pycurl.CurlMulti()
 
   # Sadly, we need to track of pending curls, or they'll get CG'd and
   # mysteriously disappear. Don't ask me!
   curls            = []
-  num_handes       = 0
+  num_handles       = 0
   unscheduled_reqs = True
 
-  while num_handes or unscheduled_reqs or curls:
+  while num_handles or unscheduled_reqs or curls:
     # If the concurrency cap hasn't been reached yet, another request can be
     # pulled off and added to the multi.
-    if unscheduled_reqs and num_handes < concurrent:
+    if unscheduled_reqs and num_handles < concurrent:
       try:
-        url, payload = requets.next()
+        url, payload = requests.next()
       except StopIteration:
         unscheduled_reqs = False
         continue
