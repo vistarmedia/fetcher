@@ -5,6 +5,6 @@ from distutils.core import setup
 
 setup(
   name='fetcher',
-  version='0.2',
+  version='0.3',
   install_requires=['pycurl==7.19.0.2'],
   packages=['fetcher'])

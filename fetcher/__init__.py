@@ -65,7 +65,7 @@ def fetch(requests, concurrent=50, timeout_ms=1000, follow_redirects=True):
         curls.remove(c)
 
       for c, errno, errmsg in err_list:
-        yield False, (c.payload, errmsg)
+        yield False, (c.payload, errmsg, c.getinfo(pycurl.EFFECTIVE_URL))
         multi.remove_handle(c)
         curls.remove(c)
 
