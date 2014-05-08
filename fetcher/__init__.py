@@ -49,9 +49,9 @@ def fetch(requests, concurrent=50, timeout_ms=1000, follow_redirects=True):
     while ret == pycurl.E_CALL_MULTI_PERFORM:
       ret, num_handles = multi.perform()
 
-    # Wait at maximum for one second for a file descriptor to become available.
+    # Wait at maximum for two seconds for a file descriptor to become available.
     # Restart if not.
-    ret = multi.select(1.0)
+    ret = multi.select(2.0)
     if ret == -1:
       continue
 
@@ -65,7 +65,8 @@ def fetch(requests, concurrent=50, timeout_ms=1000, follow_redirects=True):
         curls.remove(c)
 
       for c, errno, errmsg in err_list:
-        yield False, (c.payload, errmsg, c.getinfo(pycurl.EFFECTIVE_URL))
+        error = "%d: %s" % (errno, errmsg)
+        yield False, (c.payload, error, c.getinfo(pycurl.EFFECTIVE_URL))
         multi.remove_handle(c)
         curls.remove(c)
 
